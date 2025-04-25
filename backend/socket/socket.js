@@ -8,9 +8,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://mern-stack-social-jakh.onrender.com",
+      origin: "*",
     methods: ["GET", "POST"],
-    credentials: true,
   },
 });
 
