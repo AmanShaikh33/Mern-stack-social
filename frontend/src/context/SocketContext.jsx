@@ -2,29 +2,32 @@ import { createContext, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 import { UserData } from "./UserContext";
 
-const EndPoint = "https://mern-stack-social-jakh.onrender.com";
-
+const EndPoint = "https://mern-social-3e3m.onrender.com"; // backend URL
 const SocketContext = createContext();
 
 export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { user } = UserData();
+
   useEffect(() => {
-    const socket = io(EndPoint, {
+    if (!user?._id) return; // Wait until user data is available
+
+    const socketInstance = io(EndPoint, {
       query: {
-        userId: user?._id,
+        userId: user._id,
       },
     });
 
-    setSocket(socket);
+    setSocket(socketInstance);
 
-    socket.on("getOnlineUser", (users) => {
+    socketInstance.on("getOnlineUser", (users) => {
       setOnlineUsers(users);
     });
 
-    return () => socket && socket.close();
+    return () => socketInstance && socketInstance.disconnect();
   }, [user?._id]);
+
   return (
     <SocketContext.Provider value={{ socket, onlineUsers }}>
       {children}
