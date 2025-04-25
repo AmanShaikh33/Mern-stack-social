@@ -8,8 +8,9 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-      origin: "*",
+       origin: "https://mern-stack-social-jakh.onrender.com", // your frontend domain
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
